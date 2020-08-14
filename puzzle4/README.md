@@ -28,7 +28,7 @@ The reason we put 0 in the first value is because if we don't an error will disp
 What is especially interesting to us is the column named `password_125f80a6`. It is clearly deliberately randomized between different puzzle hunters. Now if we recall from the start that our instructor is called `noam_chomsky`, let us put in another query to try to get the value of the `password_125f80a6` column for the user `noam_chomsky`.
 
 ```
-crap'/**/UNION/**/SELECT/**/id,password_125f80a6,null,null,null,null,null/**/FROM/**/"user"/**/WHERE/**/username='noam_chomsky'--
+'/**/UNION/**/SELECT/**/id,password_125f80a6,null,null,null,null,null/**/FROM/**/"user"/**/WHERE/**/username='noam_chomsky'--
 ```
 
 Just like before, it displays the output of the second value after `Student:`
@@ -48,3 +48,13 @@ Once we raise our grades and hit submit, we can log back in to our own account. 
 ![image](gradebase7.png)
 
 These 3 words are the solution.
+
+Further commands of interest:
+
+Examining the `grade` table quickly reveals it has the columns `id,user_id,classname,grade,code,credits`. Instead of `UNION SELECT`, we can end the query and use `INSERT` to add a new entry to this table as follows:
+
+```
+';INSERT/**/INTO/**/grade/**/VALUES/**/(15122,1,'signed_by_Noam_Chomsky',333,'lolHackMIT',69420)--
+```
+
+![image](gradebase8.png)
