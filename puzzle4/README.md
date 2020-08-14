@@ -1,4 +1,4 @@
-##Puzzle 4
+## Puzzle 4
 
 First, if we log in normally, we see the grade table below (with Fs instead of As). There's not much we can take from this, other than perhaps that the instructor name `noam_chomsky` could be important later. Also, the `Recieve Diploma` button starts disabled, and the JS shows that it unhides an element that doesn't exist. So maybe we need to raise our grades?
 
