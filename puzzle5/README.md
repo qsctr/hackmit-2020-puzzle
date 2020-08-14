@@ -62,7 +62,7 @@
 
 ## Breakout Room 1: 
 	+bbbbcyyyyya
-The idea was to maximize 'y' to get the highest fibbonanci number. So the solution is achieved by looping over many 'y' commands using 'b' and 'a' and using 'c' to offset the adding.
+The idea was to maximize 'y' to get the highest fibbonanci number. So the solution can be achieved by looping over many 'y' commands using 'b' and 'a' and using 'c' to offset the adding.
 	  
 ## Breakout Room 2:
 	 +bbbbbbbbbbbbbbbbbbycsfycsfsfsfa
