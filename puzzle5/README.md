@@ -1,64 +1,6 @@
-# Psuedocode
 
-	Init:
-		scores = [0, …, 0]
-		pc = 0
-		pc_dir = 1
-		step = 0
-		unused_breaks = []
-		used_breaks = []
-		cur_reg = 0
-		prev_reg = none
-		reg_dir = 1
-		steps_per_reg = [1, …, 1]
-	cur_reg_steps = 0
 
-	Def y <yes>:
-		scores[cur_reg] += prev_reg
-
-	Def n <no>:
-		Print debug info
-
-	Def f <go faster>:
-		if steps_per_reg[cur_reg] == 1:
-			Error
-		steps_per_reg[cur_reg] -= 1
-
-	Def s <go slower>:
-		steps_per_reg[cur_reg] += 1
-
-	Def + <thumbs up>:
-		scores[cur_reg] += 1
-
-	Def - <thumbs down>:
-		scores[cur_reg] -= 1
-
-	Def c <clap>:
-	reg_dir *= -1
-
-	Def b <take a break>:
-		if pc not in used_breaks
-		unused_breaks.push_right(pc)
-		_step()
-
-	Def a <away>:
-		if unused_breaks != []:
-			used_breaks.push_left(unused_breaks.pop_right())
-			_step()
-
-	Def _step():
-		pc += pc_dir
-		step += 1
-		cur_reg_steps += 1
-		if cur_reg_steps == steps_per_reg[cur_reg]:
-		prev_reg = cur_reg
-		cur_reg += reg_dir
-		cur_reg_steps = 0
-
-	Useful:
-	skip register: sf
-
-# Actual Solutions:
+# Puzzle 5
 
 ## Breakout Room 1: 
 	+bbbbcyyyyya
