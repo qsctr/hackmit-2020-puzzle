@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+ffmpeg -i "$1" -map s -c copy subtitles.srt
+mkdir words
+for word in $(tail -n +3 subtitles.srt)
+do
+    ffmpeg -i "$1" -map "m:title:$word" -c copy "words/$word.wav"
+    echo "file 'words/$word.wav'" >> concatlist.txt
+done
+ffmpeg -f concat -i concatlist.txt -c copy joined.wav
+ffmpeg -dump_attachment:t "" -i "$1"
+python3 spectropeaks.py joined.wav | ./keymap-lookup.hs
