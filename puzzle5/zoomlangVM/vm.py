@@ -23,9 +23,10 @@ class ZoomLangVM:
     while self.pc < len(self.program):
       try:
         self.char_to_func[self.program[self.pc]]()
+        self._step()
       except KeyError:
         if self.program[self.pc] == 'n':
-          self.no()
+          self.debug()
         else:
           print(f'scores: {self.scores}')
           print(f"invalid symbol '{self.program[self.pc]}' at position {self.pc}")
@@ -41,10 +42,9 @@ class ZoomLangVM:
     if self.prev_reg is None:
       raise ZoomLangException("cannot execute yes because no previous register")
     self.scores[self.cur_reg] += self.scores[self.prev_reg]
-    self._step()
 
   # n
-  def no(self):
+  def debug(self):
     print(f'scores: {self.scores}')
     print(f'pc: {self.pc}')
     print(f'pc_dir: {self.pc_dir}')
@@ -62,40 +62,33 @@ class ZoomLangVM:
     if self.steps_per_reg[self.cur_reg] == 1:
       raise ZoomLangException(f"register {self.cur_reg} cannot go any faster")
     self.steps_per_reg[self.cur_reg] -= 1
-    self._step()
 
   # s
   def slower(self):
     self.steps_per_reg[self.cur_reg] += 1
-    self._step()
 
   # +
   def up(self):
     self.scores[self.cur_reg] += 1
-    self._step()
 
   # -
   def down(self):
     self.scores[self.cur_reg] -= 1
-    self._step()
 
   # c
   def clap(self):
     self.reg_dir *= -1
-    self._step()
 
   # b
   def take_break(self):
     if self.pc not in self.used_breaks:
       self.unused_breaks.append(self.pc)
-    self._step()
 
   # a
   def away(self):
     if self.unused_breaks:
       self.pc = self.unused_breaks.pop()
       self.used_breaks.insert(0, self.pc)
-    self._step()
 
   # _step
   def _step(self):
