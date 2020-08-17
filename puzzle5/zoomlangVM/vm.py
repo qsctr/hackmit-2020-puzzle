@@ -22,8 +22,14 @@ class ZoomLangVM:
   def run(self):
     while self.pc < len(self.program):
       try:
+        self.shouldSpecialStep = self.program[self.pc] == 'b' and self.pc in self.used_breaks
         self.char_to_func[self.program[self.pc]]()
-        self._step()
+
+        if (self.shouldSpecialStep):
+          self._special_step()
+        else: 
+          self._step()
+
       except KeyError:
         if self.program[self.pc] == 'n':
           self.debug()
@@ -95,6 +101,14 @@ class ZoomLangVM:
     self.pc += self.pc_dir
     self.step += 1
     self.cur_reg_steps += 1
+    if self.cur_reg_steps >= self.steps_per_reg[self.cur_reg]:
+      self.prev_reg = self.cur_reg
+      self.cur_reg = (self.cur_reg + self.reg_dir) % self.students
+      self.cur_reg_steps = 0
+  
+  # special _step for 'b'
+  def _special_step(self):
+    self.pc += self.pc_dir
     if self.cur_reg_steps == self.steps_per_reg[self.cur_reg]:
       self.prev_reg = self.cur_reg
       self.cur_reg = (self.cur_reg + self.reg_dir) % self.students
