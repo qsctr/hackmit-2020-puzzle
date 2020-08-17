@@ -18,18 +18,13 @@ class ZoomLangVM:
     self.reg_dir = 1
     self.steps_per_reg = [1] * students
     self.cur_reg_steps = 0
+    self.b_step = False
 
   def run(self):
     while self.pc < len(self.program):
       try:
-        self.shouldSpecialStep = self.program[self.pc] == 'b' and self.pc in self.used_breaks
         self.char_to_func[self.program[self.pc]]()
-
-        if (self.shouldSpecialStep):
-          self._special_step()
-        else: 
-          self._step()
-
+        self._step()
       except KeyError:
         if self.program[self.pc] == 'n':
           self.debug()
@@ -89,6 +84,8 @@ class ZoomLangVM:
   def take_break(self):
     if self.pc not in self.used_breaks:
       self.unused_breaks.append(self.pc)
+    else:
+      self.b_step = True
 
   # a
   def away(self):
@@ -99,17 +96,12 @@ class ZoomLangVM:
   # _step
   def _step(self):
     self.pc += self.pc_dir
-    self.step += 1
-    self.cur_reg_steps += 1
+    if not self.b_step:
+      self.step += 1
+      self.cur_reg_steps += 1
+    else:
+      self.b_step = False
     if self.cur_reg_steps >= self.steps_per_reg[self.cur_reg]:
-      self.prev_reg = self.cur_reg
-      self.cur_reg = (self.cur_reg + self.reg_dir) % self.students
-      self.cur_reg_steps = 0
-  
-  # special _step for 'b'
-  def _special_step(self):
-    self.pc += self.pc_dir
-    if self.cur_reg_steps == self.steps_per_reg[self.cur_reg]:
       self.prev_reg = self.cur_reg
       self.cur_reg = (self.cur_reg + self.reg_dir) % self.students
       self.cur_reg_steps = 0
