@@ -26,10 +26,10 @@ class ZoomLangVM:
         self.char_to_func[self.program[self.pc]]()
         self._step()
       except KeyError:
+        print(f'scores: {self.scores}')
         if self.program[self.pc] == 'n':
           self.debug()
         else:
-          print(f'scores: {self.scores}')
           print(f"invalid symbol '{self.program[self.pc]}' at position {self.pc}")
         return
       except ZoomLangException as e:
@@ -46,17 +46,16 @@ class ZoomLangVM:
 
   # n
   def debug(self):
-    print(f'scores: {self.scores}')
-    print(f'pc: {self.pc}')
-    print(f'pc_dir: {self.pc_dir}')
-    print(f'step: {self.step}')
-    print(f'unused_breaks: {self.unused_breaks}')
-    print(f'used_breaks: {self.used_breaks}')
-    print(f'cur_reg: {self.cur_reg}')
-    print(f'prev_reg: {self.prev_reg}')
-    print(f'reg_dir: {self.reg_dir}')
-    print(f'steps_per_reg: {self.steps_per_reg}')
-    print(f'cur_reg_steps: {self.cur_reg_steps}')
+    print(f'pc = {self.pc}')
+    print(f'pc_dir = {self.pc_dir}')
+    print(f'step = {self.step}')
+    print(f'unused_breaks = {self.unused_breaks}')
+    print(f'used_breaks = {self.used_breaks}')
+    print(f'cur_reg = {self.cur_reg}')
+    print(f'prev_reg = {self.prev_reg}')
+    print(f'reg_dir = {self.reg_dir}')
+    print(f'steps_per_reg = {self.steps_per_reg}')
+    print(f'cur_reg_steps = {self.cur_reg_steps}')
 
   # f
   def faster(self):
@@ -82,10 +81,10 @@ class ZoomLangVM:
 
   # b
   def take_break(self):
-    if self.pc not in self.used_breaks:
-      self.unused_breaks.append(self.pc)
-    else:
+    if self.pc in self.used_breaks:
       self.b_step = True
+    else:
+      self.unused_breaks.append(self.pc)
 
   # a
   def away(self):
@@ -96,12 +95,12 @@ class ZoomLangVM:
   # _step
   def _step(self):
     self.pc += self.pc_dir
-    if not self.b_step:
+    if self.b_step:
+      self.b_step = False
+    else:
       self.step += 1
       self.cur_reg_steps += 1
-    else:
-      self.b_step = False
-    if self.cur_reg_steps >= self.steps_per_reg[self.cur_reg]:
-      self.prev_reg = self.cur_reg
-      self.cur_reg = (self.cur_reg + self.reg_dir) % self.students
-      self.cur_reg_steps = 0
+      if self.cur_reg_steps >= self.steps_per_reg[self.cur_reg]:
+        self.prev_reg = self.cur_reg
+        self.cur_reg = (self.cur_reg + self.reg_dir) % self.students
+        self.cur_reg_steps = 0
