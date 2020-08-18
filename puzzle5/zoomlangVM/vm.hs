@@ -1,7 +1,9 @@
+{-# LANGUAGE BlockArguments  #-}
 {-# LANGUAGE NamedFieldPuns  #-}
 {-# LANGUAGE RecordWildCards #-}
 {-# LANGUAGE ViewPatterns    #-}
 
+import           Control.Monad
 import           Data.Foldable
 import           Data.List
 import qualified Data.Sequence        as S
@@ -26,28 +28,26 @@ data State = State
 
 main = do
     [read -> students] <- getArgs
-    let repl = do
-            program <- getLine
-            let (scores, err) = run State
-                    { program = V.fromList program
-                    , students
-                    , scores = S.replicate students 0
-                    , pc = 0
-                    , pc_dir = 1
-                    , step = 0
-                    , unused_breaks = []
-                    , used_breaks = []
-                    , cur_reg = 0
-                    , prev_reg = Nothing
-                    , reg_dir = 1
-                    , steps_per_reg = S.replicate students 1
-                    , cur_reg_steps = 0 }
-                scoresOutput = "scores: " ++ show (toList scores)
-            case err of
-                Nothing -> putStrLn scoresOutput
-                Just e -> putStr $ unlines ["\x1b[91m" ++ scoresOutput, e ++ "\x1b[0m"]
-            repl
-    repl
+    forever do
+        program <- getLine
+        let (scores, err) = run State
+                { program = V.fromList program
+                , students
+                , scores = S.replicate students 0
+                , pc = 0
+                , pc_dir = 1
+                , step = 0
+                , unused_breaks = []
+                , used_breaks = []
+                , cur_reg = 0
+                , prev_reg = Nothing
+                , reg_dir = 1
+                , steps_per_reg = S.replicate students 1
+                , cur_reg_steps = 0 }
+            scoresOutput = "scores: " ++ show (toList scores)
+        case err of
+            Nothing -> putStrLn scoresOutput
+            Just e -> putStr $ unlines ["\x1b[91m" ++ scoresOutput, e ++ "\x1b[0m"]
 
 data ExecResult = Step State | Pass | Error String | Debug
 
@@ -82,7 +82,7 @@ run s@State {..} = case program V.!? pc of
         exec 'b'
             | pc `elem` used_breaks = Pass
             | otherwise = Step s { unused_breaks = pc : unused_breaks }
-        exec 'a' = Step $ case unused_breaks of
+        exec 'a' = Step case unused_breaks of
             [] -> s
             pc' : uub' -> s { pc = pc', unused_breaks = uub', used_breaks = pc' : used_breaks }
         exec c = Error $ "invalid symbol " ++ show c ++ " at position " ++ show pc
