@@ -7,7 +7,7 @@
 The idea was to maximize 'y' to get the highest fibbonanci number. So the solution can be achieved by looping over many 'y' commands using 'b' and 'a' and using 'c' to offset the adding.
 	  
 ## Breakout Room 2:
-	 +bbbbbbbbbbbbbbbbbbycsfycsfsfsfa
+	+bbbbbbbbbbbbbbbbbbycsfycsfsfsfa
 We realized that the number 63245986 is the 39th fibbonanci number. So, using similar concepts from Breakout Room 1, constantly add the numbers using the 'y' commands and use the 'csf' to avoid adding to the wrong student (there are 3 students). Then loop 'ycsf' using 'b' commands that are a multiple of 3 (to match the student number).
 
 ## Breakout Room 3:
